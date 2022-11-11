@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[a4paper, 12pt, twoside]{report}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -6,16 +6,20 @@
 %Kopf- und Fußzeilen
 \usepackage{fancyhdr}
 
-\usepackage{titling}
-\setlength{\droptitle}{-4cm}
-\title{Medizinische Cloud und verteilte Systeme \\ Gruppenprojekt Kubernetes – Alternative 1}
+\title{Medical Cloud and distributed Systems \\ Project Kubernetes – Alternative 1}
 
 \author{Niklas Deines \and Elias Mende \and Constantin Michler \and Maxim Rayanov \and Felician Richter}
 \date{\today}
 
 \begin{document}
-\nonfrenchspacing
-\maketitle
+    \nonfrenchspacing
+    \maketitle
 
+    \renewcommand\contentsname{Table of Contents}
+    \tableofcontents
+
+    \input{docs/Chapter_Basics}
+    \input{docs/Chapter_systemistallation}
+    \input{docs/Chapter_Installationguide}
 
 \end{document}
