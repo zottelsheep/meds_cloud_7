@@ -111,3 +111,6 @@ venv.bak/
 /.idea/modules.xml
 /.idea/vcs.xml
 
+# Models (Onnx, Tensorflow)
+.onnx
+.h5
