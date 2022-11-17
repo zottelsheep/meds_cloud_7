@@ -37,7 +37,7 @@ def onnx_infer(modelname, X_test):
     decoded_predictions = tf.keras.applications.imagenet_utils.decode_predictions(pred, top=1)[0]
     print(f'Onnx-Model Prediction:\t     {decoded_predictions[0][1]} with prediction value {decoded_predictions[0][2]}\n')
 
-# Test Model
+#Test Model
 #Image preprocessing
 image = image_preprocessing('dog.jpg')
 #Test original keras model predictions
