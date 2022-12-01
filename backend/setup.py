@@ -5,7 +5,6 @@ INSTALL_REQ = [
     "ruamel.yaml",
     "numpy",
     "requests",
-    "tensorflow",
     "keras",
     "pillow"
 ]
