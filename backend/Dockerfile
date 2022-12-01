@@ -7,6 +7,7 @@ COPY setup.py ./
 
 
 RUN --mount=type=cache,target=/root/.cache/pip pip install .
+# Predownload Model and indexes
 RUN python -c "from meds_cloud.backend.app import load_model; load_model()"
 
 EXPOSE 5000

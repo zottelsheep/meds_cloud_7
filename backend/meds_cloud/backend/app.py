@@ -27,6 +27,10 @@ def load_model():
     global model
     model = Xception(weights='imagenet')
 
+    # Load decodings for imagenet (bit hacky ':D')
+    imagenet_utils.decode_predictions(np.zeros((2,1000)))
+
+
 def image_preprocessing(image:Image.Image,
                         target_size):
     """
