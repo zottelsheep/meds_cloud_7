@@ -4,7 +4,7 @@ const testIcon = document.getElementById("some_test");
 
 function drag_over() {
     dragText.textContent = "Release to upload";
-    target.classList.add("acitve");
+    target.classList.add("active");
     testIcon.trigger = "loop";
 }
 
