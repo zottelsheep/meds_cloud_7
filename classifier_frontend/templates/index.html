@@ -16,7 +16,7 @@
 
     <main>
         <!-- Links (sit on top) -->
-        <div class="w3-top">
+        <!-- div class="w3-top">
             <div class="w3-row w3-large w3-light-grey">
                 <div class="w3-col s3">
                     <a href="#information" class="w3-button w3-block">Do</a>
@@ -31,14 +31,14 @@
                     <a href="#" class="w3-button w3-block">This?</a>
                 </div>
             </div>
-        </div>
+        </div -->
 
         <h1>Image Classificator</h1>
 
         <!-- Content -->
         <div class="content">
 
-            <div class="border_container">
+            <div class="border_container" id="target_container">
                 <div class="drag_file_zone" id="drop_target" onclick="file_explorer();" ondrop="upload_file(event)"
                     ondragover="drag_over(); return false;" ondragleave="drag_leave();" style="text-align: center;">
 
@@ -47,9 +47,13 @@
                     </div>
 
                     <div class="icon">
-                        <script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
+                        <!-- script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
                         <lord-icon id="some_test" src="https://cdn.lordicon.com/brtridhw.json"
                             colors="primary:#4be1ec,secondary:#cb5eee" style="width:250px;height:250px">
+                        </lord-icon -->
+                        <script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
+                        <lord-icon id="some_test" src="https://cdn.lordicon.com/fgkmrslx.json"
+                            colors="primary:#53c1ec,secondary:#53c1ec" style="width:250px;height:250px">
                         </lord-icon>
                     </div>
 

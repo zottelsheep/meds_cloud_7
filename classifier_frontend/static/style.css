@@ -34,11 +34,16 @@ h1 {
     place-items: center;
     width: 100%;
     height: 100%;
-    background: 
+
+    /* For a border with gradient color */
+    /*background: 
         linear-gradient(rgb(241, 241, 241) 0 0) padding-box,
         linear-gradient(to right, rgb(250, 76, 250), cyan) border-box;
     color: #313149;
-    border: 2px solid transparent;
+    border: 2px solid transparent;*/
+
+    border: 2px dashed;
+    border-color: grey;
     border-radius: 8px;
     display: inline-block;
     /*margin: 75px 0;*/
@@ -121,3 +126,14 @@ input[type="file"] {
     border: 2px solid transparent;
     border-radius: 8px;
 } */
+
+#drop_target.active {
+    border: 2px solid;
+    border-color: rgb(83, 193, 236);
+}
+
+#target_container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
