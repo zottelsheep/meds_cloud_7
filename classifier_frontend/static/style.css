@@ -1,0 +1,139 @@
+html,body,h1,h2,h3,h4 {
+    font-family:"Lato", sans-serif; 
+    scroll-behavior: smooth;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 80px;
+    text-transform: uppercase;
+    font-weight: 1000;
+}
+
+.content {
+    margin-top: 40px;
+
+}
+
+.border_container {
+    display: grid;
+    place-items: center;
+    height: 500px;
+    border-radius: 10px;
+    background-color: rgb(241, 241, 241);
+    box-shadow: 0 1px 5px #193047;
+    margin-left: 25%;
+    margin-right: 25%;
+    padding: 5px;
+}
+
+#drop_target {
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+
+    /* For a border with gradient color */
+    /*background: 
+        linear-gradient(rgb(241, 241, 241) 0 0) padding-box,
+        linear-gradient(to right, rgb(250, 76, 250), cyan) border-box;
+    color: #313149;
+    border: 2px solid transparent;*/
+
+    border: 2px dashed;
+    border-color: grey;
+    border-radius: 8px;
+    display: inline-block;
+    /*margin: 75px 0;*/
+}
+
+.drag_file_header {
+    font-size: 20px;
+    margin-top: 0px;
+}
+
+.icon {
+    margin-top: 60px;
+}
+
+.output_zone {
+    display: grid;
+    place-items: center;
+    height: 100px;
+    border-radius: 10px;
+    background-color: rgb(241, 241, 241);
+    box-shadow: 0 1px 5px #193047;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-top: 50px;
+}
+
+.button_container {
+    margin-top: 60px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.add_button{
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 1000;
+    cursor: pointer;
+    font-size: 10px;
+    letter-spacing: 4px;
+    position: relative;
+    background: rgb(83, 193, 236);
+    background-color: linear-gradient(to right, purple, blue);
+    border: none;
+    color: rgb(255, 255, 255);
+    padding: 15px;
+    width: fit-content;
+    transition-duration: 0.1s;
+    overflow: hidden;
+    box-shadow: 0 2px 8px #000000;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.add_button:hover {
+    box-shadow: 0px 3px 6px 3px #9b9a9a;
+}
+
+.add_button:active {
+    background: #fff;
+    /* box-shadow: 0px 5px 10px 5px #22d5db; */
+    color: grey;
+}
+
+.add_button:focus {
+    outline:0;
+}
+
+#information {
+    margin-top: -10px;
+}
+
+/* For dropover visuals */
+/* #drop_target.active {
+    background: 
+        linear-gradient(rgb(241, 241, 241) 0 0) padding-box,
+        linear-gradient(to right, rgb(250, 76, 250), cyan) border-box;
+    color: #313149;
+    border: 2px solid transparent;
+    border-radius: 8px;
+} */
+
+#drop_target.active {
+    border: 2px solid;
+    border-color: rgb(83, 193, 236);
+}
+
+#target_container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
