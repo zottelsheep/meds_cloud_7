@@ -12,5 +12,5 @@ USER deamon
 # Predownload Model and indexes
 RUN python -c "from meds_cloud.backend.app import load_model; load_model()"
 
-EXPOSE 5000
+EXPOSE 5001
 CMD ["python", "-m", "meds_cloud.backend.app"]
