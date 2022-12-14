@@ -81,8 +81,8 @@ def predict():
 
 @app.after_request
 def after_request(response):
-    white_origin= ['http://localhost:5000', 'http://localhost:5001']
-    if flask.request.headers['Origin'] in white_origin:
+    white_origin = ['http://localhost:5000']
+    if flask.request.headers.get('Origin', None) in white_origin:
         response.headers['Access-Control-Allow-Origin'] = flask.request.headers['Origin'] 
         response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
