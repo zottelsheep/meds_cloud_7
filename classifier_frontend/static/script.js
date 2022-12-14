@@ -43,47 +43,49 @@ function upload_file(event) {
 
 //inputButton.addEventListener("click", upload_file_button);
 
-function upload_file_button(event) {
+// class Test extends React.Component {
+//     upload_file_button(event) {
 
-    console.log("Funktioniert!");
+//         let reader = new FileReader()
 
-    let reader = new FileReader()
+//         //let myFile = document.getElementById("input").files;
 
-    let myFile = document.getElementById("input").files;
+//         console.log(event.target.files[0]);
 
-    console.log(event.target.files[0]);
+//         reader.readAsDataURL(event.target.files[0])
 
-    reader.readAsDataURL(event.target.files[0])
-    reader.onload = () => {
-        this.setState({
-            queryImage: reader.result
-        })
-    }
+//         reader.onload = () => {
+//             //console.log("Results are:" + reader.result);
+//             this.setState({
+//                 queryImage: reader.result
+//             })
+//         }
 
-    // setImagePath = e => {
-    //     reader.readAsDataURL(e.target.files[0])
+//         // setImagePath = e => {
+//         //     reader.readAsDataURL(e.target.files[0])
 
-    //     console.log(reader.result);
+//         //     console.log(reader.result);
 
-    //     reader.onload = () => {
-    //         this.setState({
-    //             queryImage: reader.result
-    //         })
-    //     }
-    // }
+//         //     reader.onload = () => {
+//         //         this.setState({
+//         //             queryImage: reader.result
+//         //         })
+//         //     }
+//         // }
 
-    // postImage = () => {
-    //     fetch("https://theplantaeapi.herokuapp.com/api/v1/id", {
-    //         method: "POST",
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify(this.state.queryImage)
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             //test
-    //         })
-    // }
-}
+//         // postImage = () => {
+//         //     fetch("https://theplantaeapi.herokuapp.com/api/v1/id", {
+//         //         method: "POST",
+//         //         headers: { 'Content-Type': 'application/json' },
+//         //         body: JSON.stringify(this.state.queryImage)
+//         //     })
+//         //         .then(res => res.json())
+//         //         .then(data => {
+//         //             //test
+//         //         })
+//         // }
+//     }
+// }
 
 // if (validExtensions.includes(fileType)) {
 //     let fileReader = new FileReader();

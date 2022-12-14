@@ -12,6 +12,13 @@
     </link>
 </head>
 
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+<div id="upload_function_container"></div>
+
+<script src="upload_function.js"></script>
+
 <body>
 
     <main>
@@ -60,8 +67,7 @@
                     <div class="button_container">
                         <label class="add_button">
                             <span>Add Picture</span>
-                            <input id="input" type="file" onchange="upload_file_button(event)"
-                                accept=".png, .jpg, jpeg" />
+                            <input id="input" type="file" accept=".png, .jpg, jpeg" />
                         </label>
                     </div>
 
