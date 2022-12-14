@@ -41,35 +41,48 @@ function upload_file(event) {
     target2.innerHTML = loadIcon;
 }
 
-inputButton.addEventListener('click', upload_file_button());
+//inputButton.addEventListener("click", upload_file_button);
 
-function upload_file_button() {
+function upload_file_button(event) {
+
+    console.log("Funktioniert!");
 
     let reader = new FileReader()
 
-    setImagePath = e => {
-        let someURL = reader.readAsDataURL(e.target.files[0])
+    let myFile = document.getElementById("input").files;
 
-        console.log(someURL);
+    console.log(event.target.files[0]);
 
-        reader.onload = () => {
-            this.setState({
-                queryImage: reader.result
-            })
-        }
-    }
-
-    postImage = () => {
-        fetch("https://theplantaeapi.herokuapp.com/api/v1/id", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(this.state.queryImage)
+    reader.readAsDataURL(event.target.files[0])
+    reader.onload = () => {
+        this.setState({
+            queryImage: reader.result
         })
-            .then(res => res.json())
-            .then(data => {
-                //test
-            })
     }
+
+    // setImagePath = e => {
+    //     reader.readAsDataURL(e.target.files[0])
+
+    //     console.log(reader.result);
+
+    //     reader.onload = () => {
+    //         this.setState({
+    //             queryImage: reader.result
+    //         })
+    //     }
+    // }
+
+    // postImage = () => {
+    //     fetch("https://theplantaeapi.herokuapp.com/api/v1/id", {
+    //         method: "POST",
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(this.state.queryImage)
+    //     })
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             //test
+    //         })
+    // }
 }
 
 // if (validExtensions.includes(fileType)) {
