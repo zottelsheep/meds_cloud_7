@@ -18,12 +18,12 @@ function drag_leave() {
     testIcon.trigger = "empty";
 }
 
-function upload_file(event) {
+async function upload_file(event) {
     dragText.textContent = "Drag & drop a picture";
     target2.classList.remove("active");
     testIcon.trigger = "empty";
 
-
+    event.preventDefault();
 
     file = event.dataTransfer.files[0];
 
@@ -39,10 +39,34 @@ function upload_file(event) {
     </lord-icon><p>Classification in progress ...</p>`;
 
     target2.innerHTML = loadIcon;
+
+    display_output(await get_prediction(file));
+}
+
+async function get_prediction(file) {
+    var formdata = new FormData();
+    formdata.append("image", file, file.name);
+
+    var requestOptions = {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow'
+    };
+
+    const prediction = await fetch("http://localhost:5001/predict", requestOptions)
+      .then(response => response.json())
+      .then(data => {return data})
+      .catch(error => console.log('error', error));
+
+    return prediction['predictions']
+}
+
+function display_output(prediction) {
+  output = document.getElementById('output');
+  output.innerHTML = JSON.stringify(prediction);
 }
 
 //inputButton.addEventListener("click", upload_file_button);
-
 // class Test extends React.Component {
 //     upload_file_button(event) {
 

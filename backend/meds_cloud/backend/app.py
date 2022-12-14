@@ -79,6 +79,15 @@ def predict():
     # return the data dictionary as a JSON response
     return flask.jsonify(data)
 
+@app.after_request
+def after_request(response):
+    white_origin= ['http://localhost:5000', 'http://localhost:5001']
+    if flask.request.headers['Origin'] in white_origin:
+        response.headers['Access-Control-Allow-Origin'] = flask.request.headers['Origin'] 
+        response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    return response
+
 def main():
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
