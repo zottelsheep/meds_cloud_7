@@ -46,7 +46,7 @@
         <div class="content">
 
             <div class="border_container" id="target_container">
-                <div class="drag_file_zone" id="drop_target" onclick="file_explorer();" ondrop="upload_file(event)"
+                <div class="drag_file_zone" id="drop_target" ondrop="upload_file(event)"
                     ondragover="drag_over(); return false;" ondragleave="drag_leave();" style="text-align: center;">
 
                     <div class="drag_file_header">
@@ -67,47 +67,56 @@
                     <div class="button_container">
                         <label class="add_button">
                             <span>Add Picture</span>
-                            <input id="input" type="file" accept=".png, .jpg, jpeg" />
+                            <input id="input" onchange="upload_file(event)" type="file" accept=".png, .jpg, jpeg" />
                         </label>
                     </div>
 
                 </div>
             </div>
 
-            <div id='output' class="output_zone">
-                Some Output
-            </div>
+            <div id="create_output"></div>
+
+            <!-- <div id='output' class="output_zone">
+                <div class="output_content_container">
+                    <div id="labels_output"></div>
+                    <div id="probability_output"></div>
+                </div>
+            </div> -->
 
             <!-- Grid -->
-            <div class="w3-row w3-container">
+            <div id="info_section" class="w3-row w3-container">
                 <div class="w3-center w3-padding-64" id="information">
                     <span class="w3-xlarge w3-bottombar w3-border-dark-grey w3-padding-16">
                         <a href="#information" style="text-decoration: none">Information</a>
                     </span>
                 </div>
-                <div class="w3-col l3 m6 w3-light-grey w3-container w3-padding-16">
-                    <h3>Bla</h3>
-                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.
+                <div id="some_info" class="w3-col l3 m6 w3-light-grey w3-container w3-padding-16">
+                    <h3>About the classifier</h3>
+                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque
+                        elementum.
                     </p>
                 </div>
 
-                <div class="w3-col l3 m6 w3-grey w3-container w3-padding-16">
+                <!-- div class="w3-col l3 m6 w3-grey w3-container w3-padding-16">
                     <h3>Blabla</h3>
-                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.
+                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque
+                        elementum.
                     </p>
                 </div>
 
                 <div class="w3-col l3 m6 w3-dark-grey w3-container w3-padding-16">
                     <h3>Blablabla</h3>
-                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.
+                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque
+                        elementum.
                     </p>
                 </div>
 
                 <div class="w3-col l3 m6 w3-black w3-container w3-padding-16">
                     <h3>And more blabla</h3>
-                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.
+                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque
+                        elementum.
                     </p>
-                </div>
+                </div> -->
             </div>
 
         </div>
