@@ -1,6 +1,12 @@
 html,body,h1,h2,h3,h4 {
     font-family:"Lato", sans-serif; 
     scroll-behavior: smooth;
+    display: grid;
+    place-items: center;
+}
+
+body {
+    width: 100%;
 }
 
 h1 {
@@ -11,8 +17,9 @@ h1 {
 }
 
 .content {
+    display: grid;
+    place-items: center;
     margin-top: 40px;
-
 }
 
 .border_container {
@@ -22,8 +29,7 @@ h1 {
     border-radius: 10px;
     background-color: rgb(241, 241, 241);
     box-shadow: 0 1px 5px #193047;
-    margin-left: 25%;
-    margin-right: 25%;
+    width: 800px;
     padding: 5px;
 }
 
@@ -81,7 +87,7 @@ h1 {
 
 #probability_output {
     display: grid;
-    text-align: left;
+    text-align: right;
     font-size: large;
     grid-gap: 20px;
 }
@@ -165,7 +171,13 @@ input[type="file"] {
 
 #output {
     height: 100%;
+    width: 100%;
     object-fit: cover;
+}
+
+#create_output {
+    display: grid;
+    place-items: center;
 }
 
 #info_section {
@@ -175,5 +187,12 @@ input[type="file"] {
 
 #some_info{
     text-align: center;
-    
+    width: 400px;
+}
+
+#footer {
+    margin-top: 50px;
+    /* margin-left: 0%;
+    margin-right: 0%; */
+    width: 100%;
 }
