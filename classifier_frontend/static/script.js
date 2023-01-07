@@ -1,49 +1,75 @@
-const target2 = document.getElementById("drop_target");
+const dragDropZone = document.getElementById("drop_click_zone");
 const containerTarget = document.getElementById("target_container");
 const dragText = document.getElementById("drag_header");
 const testIcon = document.getElementById("some_test");
 const inputButton = document.getElementById("input");
+const output = document.getElementById('create_output');
 
 function drag_over() {
   dragText.textContent = "Release to upload";
-  target2.classList.add("active");
+  dragDropZone.classList.add("active");
   containerTarget.classList.add("active");
   testIcon.trigger = "loop";
 }
 
 function drag_leave() {
   dragText.textContent = "Drag & drop a picture";
-  target2.classList.remove("active");
+  dragDropZone.classList.remove("active");
   containerTarget.classList.remove("active");
   testIcon.trigger = "empty";
 }
 
+function place_loading_icon() {
+  let loadIcon = `<script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
+    <lord-icon
+        src="https://cdn.lordicon.com/dpinvufc.json"
+        trigger="loop"
+        style="width:250px;height:250px;margin-top:80px;color="#53c1ec";>
+    </lord-icon><p style="padding-bottom:20px;margin-top: 50px;">Classification in progress ...</p>`;
+
+  dragDropZone.innerHTML = loadIcon;
+}
+
 async function upload_file(event) {
   dragText.textContent = "Drag & drop a picture";
-  target2.classList.remove("active");
+  dragDropZone.classList.remove("active");
   testIcon.trigger = "empty";
 
   event.preventDefault();
 
   file = event.dataTransfer.files[0];
 
-  // Damit funktioniert der Butten aber Drag & Drop mag das so leider nicht :/
-  //file = event.target.files[0];
+  let fileType = file.type;
+
+  let validExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
+
+  place_loading_icon();
+
+  setTimeout(async () => {
+    displayImages(validExtensions, fileType);
+    display_output(await get_prediction(file));
+  }, 3000)
+}
+
+async function upload_file_button(event) {
+  dragText.textContent = "Drag & drop a picture";
+  dragDropZone.classList.remove("active");
+  testIcon.trigger = "empty";
+
+  event.preventDefault();
+
+  file = event.target.files[0];
 
   let fileType = file.type;
 
   let validExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
 
-  let loadIcon = `<script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
-    <lord-icon
-        src="https://cdn.lordicon.com/dpinvufc.json"
-        trigger="loop"
-        style="width:250px;height:250px;margin-top:80px;color="#53c1ec";>
-    </lord-icon><p>Classification in progress ...</p>`;
+  place_loading_icon();
 
-  target2.innerHTML = loadIcon;
-
-  display_output(await get_prediction(file));
+  setTimeout(async () => {
+    displayImages(validExtensions, fileType);
+    display_output(await get_prediction(file));
+  }, 3000)
 }
 
 async function get_prediction(file) {
@@ -65,7 +91,6 @@ async function get_prediction(file) {
 }
 
 function display_output(prediction) {
-  var output = document.getElementById('create_output');
   const outputString = JSON.stringify(prediction);
 
   let outPutHTML = `
@@ -114,6 +139,28 @@ function display_output(prediction) {
   })
 }
 
+function displayImages(validExtensions, fileType) {
+  if (validExtensions.includes(fileType)) {
+    let fileReader = new FileReader();
+
+    fileReader.onload = () => {
+      let fileURL = fileReader.result;
+      let imgTag = `<div id="output_image" class="image"><img src="${fileURL}" alt="image"></div>`;
+      dragDropZone.innerHTML = imgTag;
+    }
+
+    fileReader.readAsDataURL(file);
+  }
+  else {
+    alert('The uploaded file is not an image!')
+    dragDropZone.classList.remove("active");
+  }
+}
+
+function file_explorer() {
+  inputButton.click();
+}
+
 //inputButton.addEventListener("click", upload_file_button);
 // class Test extends React.Component {
 //     upload_file_button(event) {
@@ -160,23 +207,17 @@ function display_output(prediction) {
 // }
 
 // if (validExtensions.includes(fileType)) {
-//     let fileReader = new FileReader();
+//   let fileReader = new FileReader();
 
-//     fileReader.onload = () => {
-//         let fileURL = fileReader.result;
-//         let imgTag = `<img src="${fileURL}" alt="">`;
-//         target.innerHTML = imgTag;
-//         //containerTarget.innerHTML = imgTag;
-//     }
+//   fileReader.onload = () => {
+//     let fileURL = fileReader.result;
+//     let imgTag = `<img src="${fileURL}" alt="">`;
+//     target2.innerHTML = imgTag;
+//     //containerTarget.innerHTML = imgTag;
+//   }
 
-//     fileReader.readAsDataURL(file);
+//   fileReader.readAsDataURL(file);
 // } else {
-//     alert('The uploaded file is not an image!')
-//     target.classList.remove("active");
-// }
-
-
-
-// function file_explorer() {
-//   inputButton.click();
+//   alert('The uploaded file is not an image!')
+//   target2.classList.remove("active");
 // }
