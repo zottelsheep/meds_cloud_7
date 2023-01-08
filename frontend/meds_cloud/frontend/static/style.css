@@ -1,0 +1,201 @@
+html,body,h1,h2,h3,h4 {
+    font-family:"Lato", sans-serif; 
+    scroll-behavior: smooth;
+    display: grid;
+    place-items: center;
+}
+
+body {
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    text-transform: uppercase;
+    font-weight: 1000;
+}
+
+.content {
+    display: grid;
+    place-items: center;
+    margin-top: 40px;
+}
+
+.border_container {
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background-color: rgb(241, 241, 241);
+    box-shadow: 0 1px 5px #193047;
+    width: 800px;
+    padding: 5px;
+}
+
+#drop_target {
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed;
+    border-color: grey;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.drag_file_header {
+    font-size: 20px;
+    margin-top: 0px;
+}
+
+.icon {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.output_zone {
+    display: grid;
+    place-items: center;
+    height: 100px;
+    border-radius: 10px;
+    background-color: rgb(241, 241, 241);
+    box-shadow: 0 1px 5px #193047;
+    margin-left: 25%;
+    margin-right: 25%;
+    margin-top: 50px;
+}
+
+#labels_output {
+    display: grid;
+    font-size: large;
+    font-weight: bold;
+    text-align: left;
+    text-transform: uppercase;
+    grid-gap: 20px;
+}
+
+#probability_output {
+    display: grid;
+    text-align: right;
+    font-size: large;
+    grid-gap: 20px;
+}
+
+.output_content_container {
+    display: grid;
+    place-content: center;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    grid-gap: 30px;
+    padding: 20px;
+}
+
+#drop_click_zone {
+    height: auto;
+}
+
+.button_container {
+    margin-top: 10px;
+    padding-bottom: 40px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.add_button{
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 1000;
+    cursor: pointer;
+    font-size: 10px;
+    letter-spacing: 4px;
+    position: relative;
+    background: rgb(83, 193, 236);
+    background-color: linear-gradient(to right, purple, blue);
+    border: none;
+    color: rgb(255, 255, 255);
+    padding: 15px;
+    width: fit-content;
+    transition-duration: 0.1s;
+    overflow: hidden;
+    box-shadow: 0 2px 8px #000000;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.add_button:hover {
+    box-shadow: 0px 3px 6px 3px #9b9a9a;
+}
+
+.add_button:active {
+    background: #fff;
+    color: grey;
+}
+
+.add_button:focus {
+    outline:0;
+}
+
+#information {
+    margin-top: -10px;
+}
+
+#drop_target.active {
+    border: 2px solid;
+    border-color: rgb(83, 193, 236);
+}
+
+#target_container img {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+    padding: 20px;
+}
+
+#output {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+#create_output {
+    display: grid;
+    place-items: center;
+}
+
+#info_section {
+    display: grid;
+    place-items: center;
+}
+
+#some_info{
+    text-align: center;
+    width: 400px;
+    margin-top: 80px;
+    margin-bottom: 30px;
+    background-color: rgb(241, 241, 241);
+}
+
+#footer {
+    display: grid;
+    place-items: center;
+    margin-top: 50px;
+    width: 100%;
+    background-color: rgb(241, 241, 241);
+}
+
+#github_icon {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 1.73em;
+    text-decoration: none;
+}
+
+#github_icon:hover {
+    opacity: 0.7
+}
+
