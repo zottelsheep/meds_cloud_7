@@ -5,17 +5,18 @@
 #   curl -X POST -F image=@dog.jpg 'http://localhost:5000/predict'
 
 # import the necessary packages
-from pathlib import Path
 from typing import Any, Dict
 from PIL import Image
 
 import numpy as np
 
 from keras.applications import Xception, xception, imagenet_utils
-from keras.utils import load_img, img_to_array
+from keras.utils import img_to_array
 
 import flask
 import io
+
+from meds_cloud.backend.utils import remove_alpha
 
 # initialize our Flask application and the Keras model
 app = flask.Flask(__name__)
@@ -36,6 +37,7 @@ def image_preprocessing(image:Image.Image,
     """
     Preprocessing for both models
     """
+    image = remove_alpha(image)
     image = image.resize(target_size)
     image_array = img_to_array(image)
     image_array = np.expand_dims(image_array, axis=0)
