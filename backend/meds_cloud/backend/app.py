@@ -5,6 +5,7 @@
 #   curl -X POST -F image=@dog.jpg 'http://localhost:5000/predict'
 
 # import the necessary packages
+import io
 from typing import Any, Dict
 from PIL import Image
 
@@ -14,12 +15,13 @@ from keras.applications import Xception, xception, imagenet_utils
 from keras.utils import img_to_array
 
 import flask
-import io
+from flask_cors import CORS
 
 from meds_cloud.backend.utils import remove_alpha
 
 # initialize our Flask application and the Keras model
 app = flask.Flask(__name__)
+CORS(app)
 
 def load_model():
     # load the pre-trained Keras model (here we are using a model
@@ -80,15 +82,6 @@ def predict():
 
     # return the data dictionary as a JSON response
     return flask.jsonify(data)
-
-@app.after_request
-def after_request(response):
-    white_origin = ['http://127.0.0.1:5000']
-    if flask.request.headers.get('Origin', None) in white_origin:
-        response.headers['Access-Control-Allow-Origin'] = flask.request.headers['Origin'] 
-        response.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
-    return response
 
 def main():
     print(("* Loading Keras model and Flask starting server..."

@@ -2,6 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 INSTALL_REQ = [
     "flask",
+    "flask-cors",
     "ruamel.yaml",
     "numpy",
     "requests",
