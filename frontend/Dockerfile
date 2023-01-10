@@ -10,4 +10,4 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install .
 
 USER deamon
 
-CMD ["python", "-m", "meds_cloud.frontend.frontend"]
+CMD ["python", "-m", "meds_cloud.frontend.app"]
