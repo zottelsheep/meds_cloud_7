@@ -1,0 +1,16 @@
+---
+ apiVersion: v1
+ kind: Pod
+ metadata:
+   name: medscloud-backend
+   labels:
+      release: backend-latest
+ spec:
+   containers:
+     - name: meds-cloud
+       image: meds_cloud:backend-latest
+       imagePullPolicy: Never
+       command: []
+       ports:
+         - containerPort: 5001
+
