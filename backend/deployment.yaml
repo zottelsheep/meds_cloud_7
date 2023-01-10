@@ -1,0 +1,24 @@
+---
+ apiVersion: apps/v1
+ kind: Deployment
+ metadata:
+   name: medscloud-backend
+   labels:
+      release: backend-latest
+ spec:
+   replicas: 3
+   selector:
+     matchLabels:
+       release: backend-latest
+   template:
+     metadata:
+       labels:
+         release: backend-latest
+     spec:
+       containers:
+         - name: meds-cloud
+           image: meds_cloud:backend-latest
+           imagePullPolicy: Never
+           command: []
+           ports:
+             - containerPort: 5001
