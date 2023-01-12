@@ -7,6 +7,6 @@ spec:
     app.kubernetes.io/name: medscloud-frontend
   ports:
     - protocol: TCP
-      port: 5000
-      targetPort: 5000
+      port: 8000
+      targetPort: 8000
   type: NodePort

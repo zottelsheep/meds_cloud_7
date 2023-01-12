@@ -83,11 +83,14 @@ def predict():
     # return the data dictionary as a JSON response
     return flask.jsonify(data)
 
+def create_app():
+    load_model()
+    return app
 def main():
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
     load_model()
-    app.run(host='0.0.0.0',
+    create_app().run(host='0.0.0.0',
             port=5001)
 
 

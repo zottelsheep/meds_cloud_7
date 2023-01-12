@@ -5,7 +5,8 @@ INSTALL_REQ = [
 ]
 
 EXTRAS_REQ = dict (
-    dev=["pytest", "pytest-mock", "pytest-cov"]
+    dev=["pytest", "pytest-mock", "pytest-cov"],
+    prod=["gunicorn"]
    )
 
 setup(

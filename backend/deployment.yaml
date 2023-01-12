@@ -23,4 +23,4 @@
            imagePullPolicy: Never
            command: []
            ports:
-             - containerPort: 5001
+             - containerPort: 8000
