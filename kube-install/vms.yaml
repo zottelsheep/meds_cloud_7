@@ -1,0 +1,67 @@
+kube-pool:
+  type: pool
+  path: /kube/kube-pool
+
+ubuntu2204:
+  type: image
+  url: https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img
+  pool: kube-pool
+
+k8s-net:
+  type: network
+  cidr: 192.168.111.0/24
+  domain: k8s-thab.local
+
+# api-loadbalacer:
+#   type: loadbalancer
+#   nets:
+#     - name: k8s-net
+#       alias:
+#         - api.k8s-thab.local
+#   ports:
+#     - 6443
+#   vms:
+#     - master0
+#   pool: kube-pool
+
+master0:
+  image: ubuntu2204
+  numcpus: 4
+  memory: 2048
+  disks:
+    - size: 5
+    - thin: true
+  nets:
+    - name: k8s-net
+  reservedns: true
+  reservehost: true
+  reserveip: true
+  pool: kube-pool
+
+worker0:
+  image: ubuntu2204
+  numcpus: 4
+  memory: 2048
+  disks:
+    - size: 5
+    - thin: true
+  nets:
+    - name: k8s-net
+  reservedns: true
+  reservehost: true
+  reserveip: true
+  pool: kube-pool
+
+worker1:
+  image: ubuntu2204
+  numcpus: 4
+  memory: 2048
+  disks:
+    - size: 5
+    - thin: true
+  nets:
+    - name: k8s-net
+  reservedns: true
+  reservehost: true
+  reserveip: true
+  pool: kube-pool
