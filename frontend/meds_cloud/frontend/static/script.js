@@ -82,7 +82,7 @@ async function get_prediction(file) {
     redirect: 'follow'
   };
 
-  const prediction = await fetch("http://localhost:5001/predict", requestOptions)
+  const prediction = await fetch("./api/predict", requestOptions)
     .then(response => response.json())
     .then(data => { return data })
     .catch(error => console.log('error', error));
@@ -159,4 +159,3 @@ function displayImages(validExtensions, fileType) {
 
 function file_explorer() {
   inputButton.click();
-}
