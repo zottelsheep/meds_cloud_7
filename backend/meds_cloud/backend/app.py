@@ -86,12 +86,14 @@ def predict():
 def create_app():
     load_model()
     return app
+
 def main():
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
-    load_model()
+
     create_app().run(host='0.0.0.0',
-            port=5001)
+                     port=5001
+                     )
 
 
 # if this is the main thread of execution first load the model and

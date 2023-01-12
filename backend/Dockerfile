@@ -13,4 +13,4 @@ USER deamon
 RUN python -c "from meds_cloud.backend.app import load_model; load_model()"
 
 EXPOSE 8000
-CMD ["gunicorn", "--workers=2", "--threads=4", "--worker-class=gthread", "-b", "0.0.0.0", "meds_cloud.backend.app:app"]
+CMD ["gunicorn", "--workers=2", "--threads=4", "--worker-class=gthread", "-b", "0.0.0.0", "meds_cloud.backend.app:create_app()"]
