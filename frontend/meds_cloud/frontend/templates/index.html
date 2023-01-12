@@ -29,29 +29,35 @@
 
             <div class="border_container" id="target_container">
                 <div class="drag_file_zone" id="drop_target" ondrop="upload_file(event)"
-                    ondragover="drag_over(); return false;" ondragleave="drag_leave();" style="text-align: center;">
+                    ondragover="drag_over(); return false;" ondragleave="drag_leave();" onclick="file_explorer()"
+                    style="text-align: center;">
 
-                    <div id="drop_click_zone" onclick="file_explorer()">
-                        <div class="drag_file_header">
-                            <p id="drag_header">Drag & drop a picture</p>
-                        </div>
-
-                        <div class="icon">
-                            <script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
-                            <lord-icon id="some_test" src="https://cdn.lordicon.com/fgkmrslx.json"
-                                colors="primary:#53c1ec,secondary:#53c1ec" style="width:250px;height:250px">
-                            </lord-icon>
-                        </div>
+                    <div class="drag_file_header">
+                        <p id="drag_header">Drag & drop a picture</p>
                     </div>
 
-                    <div class="button_container">
-                        <label class="add_button">
-                            <span>Add Picture</span>
-                            <input id="input" onchange="upload_file_button(event)" type="file"
-                                accept=".png, .jpg, jpeg" />
-                        </label>
+                    <div class="icon">
+                        <script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
+                        <lord-icon id="some_test" src="https://cdn.lordicon.com/fgkmrslx.json"
+                            colors="primary:#53c1ec,secondary:#53c1ec" style="width:250px;height:250px">
+                        </lord-icon>
+                    </div>
+
+                    <div class="drag_file_header">
+                        <p id="drag_header">Or click to browse</p>
                     </div>
                 </div>
+            </div>
+
+            <div id="buttons_container">
+                <div class="add_button_container">
+                    <label class="add_button">
+                        <span>Add Picture</span>
+                        <input id="input" onchange="upload_file_button(event)" type="file" accept=".png, .jpg, jpeg" />
+                    </label>
+                </div>
+
+                <button id="resend_button" onclick="resend_request_button()">Resend Request</button>
             </div>
 
             <div id="create_output"></div>
@@ -59,8 +65,8 @@
             <div id="info_section">
                 <div id="some_info">
                     <h3>About the classifier</h3>
-                    <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque
-                        elementum.
+                    <p>This web application uses the Xception model for object classification. To classify something,
+                        simply insert an image above. You will then receive the corresponding output.
                     </p>
                 </div>
             </div>

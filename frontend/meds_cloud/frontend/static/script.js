@@ -1,9 +1,15 @@
-const dragDropZone = document.getElementById("drop_click_zone");
+const dragDropZone = document.getElementById("drop_target");
 const containerTarget = document.getElementById("target_container");
 const dragText = document.getElementById("drag_header");
 const testIcon = document.getElementById("some_test");
 const inputButton = document.getElementById("input");
 const output = document.getElementById('create_output');
+const createButtonZone = document.getElementById("create_button");
+const requestButton = document.getElementById('resend_button');
+let imgFileData;
+let validExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
+
+requestButton.classList.add("active");
 
 function drag_over() {
   dragText.textContent = "Release to upload";
@@ -30,6 +36,19 @@ function place_loading_icon() {
   dragDropZone.innerHTML = loadIcon;
 }
 
+function place_loading_icon_output() {
+  let loadIcon = `<script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
+  <lord-icon
+      src="https://cdn.lordicon.com/dpinvufc.json"
+      trigger="loop"
+      style="width:150px;height:150px;">
+  </lord-icon><p>Resend Request ...</p>`;
+
+  const output_container = document.getElementById('output');
+
+  output_container.innerHTML = loadIcon;
+}
+
 async function upload_file(event) {
   dragText.textContent = "Drag & drop a picture";
   dragDropZone.classList.remove("active");
@@ -37,18 +56,25 @@ async function upload_file(event) {
 
   event.preventDefault();
 
+  imgFileData = event.dataTransfer.files[0];
+
   file = event.dataTransfer.files[0];
 
   let fileType = file.type;
 
-  let validExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
+  // let validExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
 
-  place_loading_icon();
-
-  setTimeout(async () => {
-    displayImages(validExtensions, fileType);
-    display_output(await get_prediction(file));
-  }, 3000)
+  if (validExtensions.includes(fileType)) {
+    place_loading_icon();
+    setTimeout(async () => {
+      displayImages(fileType);
+      display_output(await get_prediction(file));
+      requestButton.classList.remove("active");
+    }, 3000)
+  }
+  else {
+    alert('The uploaded file is not an image!')
+  }
 }
 
 async function upload_file_button(event) {
@@ -58,18 +84,36 @@ async function upload_file_button(event) {
 
   event.preventDefault();
 
+  imgFileData = event.target.files[0];
+
   file = event.target.files[0];
 
   let fileType = file.type;
 
-  let validExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
+  // let validExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
 
-  place_loading_icon();
+  if (validExtensions.includes(fileType)) {
+    place_loading_icon();
+    setTimeout(async () => {
+      displayImages(fileType);
+      display_output(await get_prediction(file));
+      requestButton.classList.remove("active");
+    }, 3000)
+  }
+  else {
+    alert('The uploaded file is not an image!')
+  }
+}
 
-  setTimeout(async () => {
-    displayImages(validExtensions, fileType);
-    display_output(await get_prediction(file));
-  }, 3000)
+async function resend_request_button() {
+  if (imgFileData) {
+    place_loading_icon_output();
+    setTimeout(async () => {
+      display_output(await get_prediction(imgFileData));
+    }, 2000)
+  } else {
+    alert('No available request to reload. Make sure you have inserted an image first!');
+  }
 }
 
 async function get_prediction(file) {
@@ -139,7 +183,7 @@ function display_output(prediction) {
   })
 }
 
-function displayImages(validExtensions, fileType) {
+function displayImages(fileType) {
   if (validExtensions.includes(fileType)) {
     let fileReader = new FileReader();
 
