@@ -24,3 +24,16 @@
            command: []
            ports:
              - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: medscloud-frontend-service
+spec:
+  selector:
+    app.kubernetes.io/name: medscloud-frontend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: NodePort
