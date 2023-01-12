@@ -7,5 +7,6 @@ spec:
     app.kubernetes.io/name: medscloud-backend
   ports:
     - protocol: TCP
-      port: 80
+      port: 5001
       targetPort: 5001
+  type: NodePort
