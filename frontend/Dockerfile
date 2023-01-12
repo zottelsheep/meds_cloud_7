@@ -10,4 +10,5 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install .
 
 USER deamon
 
+EXPOSE 5000
 CMD ["python", "-m", "meds_cloud.frontend.app"]
