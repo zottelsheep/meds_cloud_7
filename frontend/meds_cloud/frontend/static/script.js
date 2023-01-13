@@ -70,7 +70,7 @@ async function upload_file(event) {
       displayImages(fileType);
       display_output(await get_prediction(file));
       requestButton.classList.remove("active");
-    }, 3000)
+    }, 0)
   }
   else {
     alert('The uploaded file is not an image!')
@@ -98,7 +98,7 @@ async function upload_file_button(event) {
       displayImages(fileType);
       display_output(await get_prediction(file));
       requestButton.classList.remove("active");
-    }, 3000)
+    }, 0)
   }
   else {
     alert('The uploaded file is not an image!')
@@ -110,7 +110,7 @@ async function resend_request_button() {
     place_loading_icon_output();
     setTimeout(async () => {
       display_output(await get_prediction(imgFileData));
-    }, 2000)
+    }, 0)
   } else {
     alert('No available request to reload. Make sure you have inserted an image first!');
   }
@@ -203,3 +203,4 @@ function displayImages(fileType) {
 
 function file_explorer() {
   inputButton.click();
+  }
