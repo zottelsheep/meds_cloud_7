@@ -35,8 +35,17 @@ class app {
     const prediction = await fetch(api_endpoint, requestOptions)
       .then(response => response.json())
       .then(data => { return data })
+      .catch(error => {
+        console.log('Prediction-Error:', error);
+        return null
+      });
 
-    return prediction['predictions']
+    if (prediction) {
+      return prediction['predictions']
+    }
+    else {
+      return null
+    }
   }
 
   drag_over() {
@@ -76,6 +85,13 @@ class app {
     var probabilities = document.createElement('td')
     probabilities = table.appendChild(probabilities)
     probabilities.classList.add('probability_output')
+
+    if (!prediction){
+      let error = document.createElement('tr')
+      error.innerText = 'Could not get prediction. Please try again later'
+      lables.appendChild(error)
+      return
+    }
 
     prediction.forEach(element => {
       let label = document.createElement('tr')
