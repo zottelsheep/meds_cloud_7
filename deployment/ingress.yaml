@@ -1,13 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-     name: medscloud-backend
+     name: medscloud-ingress
      annotations:
-      kubernetes.io/ingress.class: "nginx"
-      nginx.ingress.kubernetes.io/add-base-url: "true"
-      nginx.ingress.kubernetes.io/rewrite-target: /$1
-      nginx.ingress.kubernetes.io/service-upstream: "true"
-      nginx.ingress.kubernetes.io/proxy-body-size: 10M
+       nginx.ingress.kubernetes.io/add-base-url: "true"
+       nginx.ingress.kubernetes.io/rewrite-target: /$1
+       nginx.ingress.kubernetes.io/service-upstream: "true"
+       nginx.ingress.kubernetes.io/proxy-body-size: 10M
 spec:
   ingressClassName: nginx
   rules:

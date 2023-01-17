@@ -19,8 +19,7 @@
      spec:
        containers:
          - name: meds-cloud
-           image: meds_cloud:frontend-latest
-           imagePullPolicy: Never
+           image: zottelsheep/meds_cloud:frontend-latest
            command: []
            ports:
              - containerPort: 8000
