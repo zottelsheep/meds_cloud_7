@@ -14,6 +14,7 @@ class app {
     this.dragDropZone = document.getElementById("drop_target");
     this.containerTarget = document.getElementById("target_container");
     this.dragText = document.getElementById("drag_header");
+    this.loading_picture_icon = document.getElementById("loading_picture_icon");
     this.inputButton = document.getElementById("input");
     this.output = document.getElementById('output_container');
     this.createButtonZone = document.getElementById("create_button");
@@ -52,12 +53,14 @@ class app {
     this.dragText.textContent = "Release to upload";
     this.dragDropZone.classList.add("active");
     this.containerTarget.classList.add("active");
+    this.loading_picture_icon.trigger = "loop";
   }
 
   drag_leave() {
     this.dragText.textContent = "Drag & drop a picture";
     this.dragDropZone.classList.remove("active");
     this.containerTarget.classList.remove("active");
+    this.loading_picture_icon.trigger = "emtpy";
   }
 
   place_loading_icon_output() {
@@ -156,7 +159,7 @@ class app {
   }
 
   async upload_file(event) {
-    this.dragDropZone.classList.remove("active");
+    this.drag_leave();
 
     event.preventDefault();
 
