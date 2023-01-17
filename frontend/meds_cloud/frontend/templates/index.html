@@ -5,19 +5,11 @@
     <title>Image Classificator</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="./static/style.css">
     </link>
 </head>
-
-<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-
-<div id="upload_function_container"></div>
-
-<script src="upload_function.js"></script>
 
 <body>
 
@@ -28,19 +20,12 @@
         <div class="content">
 
             <div class="border_container" id="target_container">
-                <div class="drag_file_zone" id="drop_target" ondrop="upload_file(event)"
-                    ondragover="drag_over(); return false;" ondragleave="drag_leave();" onclick="file_explorer()"
+                <div class="drag_file_zone" id="drop_target" ondrop="m.upload_file(event)"
+                    ondragover="m.drag_over(); return false;" ondragleave="m.drag_leave();" onclick="m.file_explorer()"
                     style="text-align: center;">
 
                     <div class="drag_file_header">
-                        <p id="drag_header">Drag & drop a picture</p>
-                    </div>
-
-                    <div class="icon">
-                        <script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
-                        <lord-icon id="some_test" src="https://cdn.lordicon.com/fgkmrslx.json"
-                            colors="primary:#53c1ec,secondary:#53c1ec" style="width:250px;height:250px">
-                        </lord-icon>
+                        <p id="drag_header">Drag &amp; drop a picture</p>
                     </div>
 
                     <div class="drag_file_header">
@@ -50,17 +35,11 @@
             </div>
 
             <div id="buttons_container">
-                <div class="add_button_container">
-                    <label class="add_button">
-                        <span>Add Picture</span>
-                        <input id="input" onchange="upload_file_button(event)" type="file" accept=".png, .jpg, jpeg" />
-                    </label>
-                </div>
-
-                <button id="resend_button" onclick="resend_request_button()">Resend Request</button>
+                <button id="add_button" class="button" onclick="m.file_explorer()">Add Picture</button>
+                <button id="request_button" class="button" onclick="m.resend_request_button()">Resend Request</button>
             </div>
 
-            <div id="create_output"></div>
+            <div id="output_container"></div>
 
             <div id="info_section">
                 <div id="some_info">
@@ -82,7 +61,8 @@
     </footer>
 
     <!-- Script -->
-    <script src="../static/script.js"></script>
+    <script src="https://cdn.lordicon.com/fudrjiwc.js"></script>
+    <script src="./static/script.js"></script>
+    <script> let m = new app(api_endpoint="{{api_endpoint}}") </script>
 
 </body>
-
