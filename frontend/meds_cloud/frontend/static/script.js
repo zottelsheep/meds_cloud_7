@@ -92,10 +92,9 @@ class app {
       lables.appendChild(error)
       return
     }
-
     prediction.forEach(element => {
       let label = document.createElement('tr')
-      label.textContent = element.label + ': ';
+      label.textContent = element.label.replace("_"," ") + ': ';
       lables.appendChild(label)
 
       let probability = document.createElement('tr')
@@ -135,6 +134,10 @@ class app {
     
     // dispatch a click event to open the file dialog
     inputElement.dispatchEvent(new MouseEvent("click")); 
+
+    // Remove node
+    inputElement.remove()
+
   }
 
   async make_prediction(file) {
@@ -143,8 +146,9 @@ class app {
 
     this.place_loading_icon_output();
 
+    this.displayImage(file);
+
     setTimeout(async () => {
-      this.displayImage(file);
       this.display_output(await this.get_prediction(file));
     }, this.time_to_wait_before_request)
 
@@ -181,7 +185,6 @@ class app {
     }
     this.make_prediction(this.last_image)
   }
-
 
 }
 
