@@ -1,15 +1,33 @@
 \documentclass[a4paper, 12pt, twoside]{report}
-\usepackage[ngerman]{babel}
+\usepackage[british]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[a4paper,left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{csquotes}
+\usepackage{moresize}
 
 %Kopf- und Fußzeilen
 \usepackage{fancyhdr}
 
-\title{Medical Cloud and distributed Systems \\ Project Kubernetes – Alternative 1}
+%Bibliogrpahy
+\usepackage[backend=biber,style=numeric , sorting=none]{biblatex}
+%, style=alphabetic, sorting=nty Falls anderer Style gewünscht
+\DefineBibliographyStrings{english}{ 
+   andothers = {et\addabbrvspace al\adddot},
+   andmore   = {et\addabbrvspace al\adddot},
+}
+\addbibresource{Literatur.bib}
+
+%Hyperlinks
+\usepackage{hyperref}
+
+
+\title{\large{Technische Hochschule Aschaffenburg \\ Medical Cloud and distributed Systems}\vspace{1cm} \\\HUGE{Project Kubernetes} \\ \Large{Build and deploy your own scalable web service}\vspace{1cm}}
 
 \author{Niklas Deines \and Elias Mende \and Constantin Michler \and Maxim Rayanov \and Felician Richter}
-\date{\today}
+\date{18th January 2023}
 
 \begin{document}
     \nonfrenchspacing
@@ -21,5 +39,6 @@
     \input{docs/Chapter_Basics}
     \input{docs/Chapter_systemistallation}
     \input{docs/Chapter_Installationguide}
+    \printbibliography
 
 \end{document}

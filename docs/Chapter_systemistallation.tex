@@ -1,1 +1,39 @@
 \chapter{System and environment installation}
+\section{Prerequisites}
+    To perform a server setup and application deployment, access to the server(s), either physical or via a remote connection, is required.
+    
+\section{Server setup}
+\section{Container node setup with Ansible}
+\section{Kubernetes Cluster setup}
+\section{Application deployment}
+    \subsection{Deployment Specifications}
+        \subsubsection{Backend and Frontend}
+            The deployment for the backend as well as the frontend is defined by the files \texttt{backend.yaml} and \texttt{frontend.yaml}.
+            Once applied, it deploys a replica set consisting of three pods, build from the container image \texttt{zottelsheep/meds\_cloud\:backend\-latest} for the backend
+            or \texttt{zottelsheep/meds\_cloud\:frontend\-latest} for the frontend and exposes the \texttt{containerPort 8000}.
+            The services manage connections to these pods and make them available inside the cluster via the NodePort. 
+            To specify which Pods should be addressed by the service, the \texttt{selector} field is used, which matches the tag from the deployed Pods.
+
+        \subsubsection{Ingress}
+            The ingress is used to make the services available to the outside of the cluster.
+            It is described in \texttt{ingress.yaml}.
+            Each service and its respective port are assigned an URL path, under which the resources can be accessed. 
+        
+    \subsection{Performing the Deployment}
+        The command line tool \textbf{\texttt{kubectl}} is used for the application deployment.
+        When managing a remote server, \texttt{kubectl} has to be configured, so that you can deploy from your machine.
+        This is done with a \texttt{config} file, which should be located at \texttt{\$HOME/.kube} or be specified with the \texttt{--kubeconfig} flag \cite{Kubernetes_kubeconfig:2022}.
+        The \texttt{config} file specifies the server and proxy-url and also contains certificate data for a secure connection to the server.
+        \medskip\\
+        Once \texttt{kubectl} is configured and the cluster setup specified, deploying the application is simple.
+        \begin{itemize}
+            \item \texttt{kubectl apply -f backend.yaml} deploys the pods and service as defined in \texttt{backend.yaml}
+            \item \texttt{kubectl apply -f frontend.yaml} deploys the pods and service as defined in \texttt{frontend.yaml}
+            \item \texttt{kubectl apply -f ingress.yaml} deploys the ingress as defined in \texttt{ingress.yaml}
+        \end{itemize}
+        After the ingress is deployed, \texttt{kubectl get ingress} will list an external IP address.
+        Using this IP address in combination with the paths defined in \texttt{ingress.yaml} , the services can be accessed either from a webbrowser or using a \texttt{curl} command.
+    
+
+    
+    
