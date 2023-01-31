@@ -10,21 +10,23 @@ The frontend represents the web interface with which the user can perform variou
 The backend is addressed via simple HTTP request. For image processing, the Python Imaging Library (PIL) is used to determine the many different image file formats that can be sent via the frontend. PIL provides a set of classes and methods for various image formats operations like reading, writing and also for image data manipulating such as cropping, rotation, and color conversions. For classification the Xception model from Keras is used. The Xception model is a trained convolutional neural network (CNN) model that recognizes and classifies images in the ImageNet dataset with high accuracy. The ImageNet dataset, contains over 1 million images and 1000 different classes \cite{Xception:2017}.
 
 \section{Architecture}
-    In Figure~\ref{fig:Architecture} an overview of our proposed and afterwards implemented architecture for the service deployment and Kubernetes integration is shown. Therefore the function of the individual components are explained in detail as follows below.
     
     \begin{figure}[htbp]
-        \includegraphics[width=15cm]{assets/architecture-overview.png}
+        \includegraphics[width=15cm]{docs/assets/architecture-overview.png}
         \centering
         \captionsetup{justification=centering, margin=1cm}
         \caption{Architecture concept for the service deployment with Kubernetes}
         \label{fig:Architecture}
     \end{figure}
+
+    In Figure~\ref{fig:Architecture} an overview of our proposed and afterwards implemented architecture for the service deployment and Kubernetes integration is shown. Therefore the function of the individual components are explained in detail as follows below.
+
 \section{Application deployment}
     \subsection{Deployment Specifications}
         \subsubsection{Backend and Frontend}
             The deployment for the backend as well as the frontend is defined by the files \texttt{backend.yaml} and \texttt{frontend.yaml}.
-            Once applied, it deploys a replica set consisting of three pods, build from the container image \texttt{zottelsheep/meds\_cloud\:backend\-latest} for the backend
-            or \texttt{zottelsheep/meds\_cloud\:frontend\-latest} for the frontend and exposes the \texttt{containerPort 8000}.
+            Once applied, it deploys a replica set consisting of three pods, build from the container image \texttt{zottelsheep/meds\_cloud:backend-\\latest} for the backend
+            or \texttt{zottelsheep/meds\_cloud:frontend-latest} for the frontend and exposes the \texttt{containerPort 8000}.
             The services manage connections to these pods and make them available inside the cluster via the NodePort. 
             To specify which Pods should be addressed by the service, the \texttt{selector} field is used, which matches the tag from the deployed Pods.
 
@@ -43,7 +45,7 @@ The backend is addressed via simple HTTP request. For image processing, the Pyth
         \begin{itemize}
             \item \texttt{kubectl apply -f backend.yaml} deploys the pods and service as defined in \texttt{backend.yaml}
             \item \texttt{kubectl apply -f frontend.yaml} deploys the pods and service as defined in \texttt{frontend.yaml}
-             \item \texttt{kubectl apply -f ingress.yaml} deploys the ingress as defined in \texttt{ingress.yaml}
+            \item \texttt{kubectl apply -f ingress.yaml} deploys the ingress as defined in \texttt{ingress.yaml}
         \end{itemize}
         After the ingress is deployed, \texttt{kubectl get ingress} will list an external IP address.
         Using this IP address in combination with the paths defined in \texttt{ingress.yaml} , the services can be accessed either from a webbrowser or using a \texttt{curl} command.
