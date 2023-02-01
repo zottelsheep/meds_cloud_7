@@ -12,18 +12,6 @@ k8s-net:
   cidr: 192.168.111.0/24
   domain: k8s-thab.local
 
-# api-loadbalacer:
-#   type: loadbalancer
-#   nets:
-#     - name: k8s-net
-#       alias:
-#         - api.k8s-thab.local
-#   ports:
-#     - 6443
-#   vms:
-#     - master0
-#   pool: kube-pool
-
 master0:
   image: ubuntu2204
   numcpus: 4
