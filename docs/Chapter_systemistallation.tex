@@ -1,14 +1,16 @@
 \chapter{System and environment installation}
 
-This chapter will cover the installation process of a working Kubernetes cluster with one Master-Node and 2 Worker-Nodes with a \texttt{flannel-overlay network} as well as loadbalancing using \texttt{metallb} and ingress-support using \texttt{nginx-ingress} on a Ubuntu system.\\\\The guide is not meant to install a production-grade Kubernetes cluster but will try to "simulate" a professional infrastructure environment.
+This chapter will cover the installation process of a working Kubernetes cluster with one Master-Node and 2 Worker-Nodes with a \texttt{flannel-overlay network} as well as loadbalancing using \texttt{MetalLb} and ingress-support using \texttt{nginx-ingress} on a Ubuntu system.\\\\
+This guide is not meant to install a production-grade Kubernetes cluster but will try to "simulate" a professional infrastructure environment.
 
 \section{Prerequisites}
  \begin{itemize}
-     \item To perform the server setup and application deployment, access to the server(s), either physical or via a remote connection, is required.
+     \item To perform the server setup and application deployment, root-access to the server(s), either physical or via a remote connection, is required.
      \item The servers must have an active internet connection, since the installation-process frequently needs to download different dependencies.
  \end{itemize}
 \section{Server setup}
-Each node must be deployed on its own system, whether virtual or physical. This guide will use virtualization to set up each node on a single server. As a backend we use \texttt{libvirt} + \texttt{qemu with kvm} to setup our virtual machines. For easier configuration of libvirt we use a tool called \texttt{kcli}. Ubuntu is used as the distribution of choice, but other Linux distributions can be used as well.\\\\\noindent The overall steps are as follows:
+Each node must be deployed on its own system, whether virtual or physical. This guide will use virtualization to set up each node on a single server. As a backend we use \texttt{libvirt} + \texttt{qemu with kvm} to setup our virtual machines. For easier configuration of libvirt we use a tool called \texttt{kcli}. Ubuntu is used as the distribution of choice, but other Linux distributions can be used as well.\\\\
+The overall steps are as follows:
 \begin{itemize}
 	\item Install prerequisites to host system
 	\item Create a virtual network, so that each VM can communicate to each other
@@ -17,64 +19,90 @@ Each node must be deployed on its own system, whether virtual or physical. This 
 	\item Provision the VMs
 \end{itemize}
 
-\noindent Kcli has a feature called \texttt{plans} to construct a virtualized environment. These plans are simply yaml-files that define different resources that together form the virtualized environment.
-We'll use this feature to create a reproducible environment and save the configuration as code inside git. This plan will create the virtual network, download the image and create the three VMs. We'll go over the different sections in detail later in this document:
-\lstinputlisting[caption=kcli plan]{./kube-install/vms.yaml}
-This plan can be executed with the following command:
-\begin{lstlisting}[language=bash]
-sudo kcli create plan <plan> <name>
-\end{lstlisting}
-
 \subsection{Install prerequisites to host system}
 Libvirt and qemu can be installed using the system package manager.
 \begin{lstlisting}[language=bash] 
+# Machine: user@host
 sudo apt update
 sudo apt install libvirt-qemu-system libvirt-dev
 \end{lstlisting}
-Kcli on the other hand is a python-based program and currently not available as a Ubuntu package, so we have to install python3 manually and install kcli using pip.
+Kcli on the other hand is a python-based program and currently not available as a Ubuntu package, so we have to install python3 manually and install\texttt{kcli}using pip.
 \begin{lstlisting}[language=bash] 
+# Machine: user@host
 sudo apt install python3 python3-pip python3-venv python3-dev
-sudo pip install --system kcli
+sudo pip install kcli
+\end{lstlisting}
+
+\subsection{Configuring user and permissions}
+We will create a dedicated user with sufficient permission to interact with libvirt in order to administrate our Kubernetes cluster. We will use this user for the rest of guide.
+\begin{lstlisting}[language=bash,caption=Create dedicated user for administrating Kubernetes cluster] 
+# Machine: user@host
+
+sudo adduser kubeadmin
+sudo usermod -a -G libvirt,sudo kubeadmin
 \end{lstlisting}
 
 \subsection{Creating a key-pair for ssh-access to virtual-machines}
 Kcli can automatically register a public key, so that one can ssh directly into freshly baked VM, or for usage with tools such as Ansible.
 We'll create a fresh pair of keys and add them to our ssh-agent for maximum comfort:
 \begin{lstlisting}[language=bash,caption=Create SSH-Keypair for Kcli] 
+# Machine: kubeadmin@host 
 ssh-keygen -t ed25519 -C "Kcli" -f ~/.kcli/ssh-key.key
 ssh-add ~/.kcli/ssh-key.key
 \end{lstlisting}
 From now on we can access our newly created VMs with \texttt{kcli ssh <name of VM>}.
-\subsection{Create virtual-network}
-In a virtual environment there are so called \texttt{Virtual network adapters} that are used to establish network-connectivity to and between other machines. These virtual network adapters are often connected to a \texttt{virtual switch} operating in a multitude of different modes, for example:
-\begin{itemize}
-	\item \texttt{NAT}: Network Address Translation is most commonly used for simple outward network connectivity but no inward connectivity. In this configuration the outside network cannot talk directly to the VMs, although there is the possibility of Port-Forwarding to enable Guest communication.
-	\item \texttt{Bridge-Mode}: In this mode the VMs get directly connected to the outside network similar to a physical machine. This way all communication is managed through the original networking-stack and outward as well as inward traffic is possible.
-\end{itemize}
-The available modes and configurations are managed by the virtualization-platform and underlying OS.
-By default there is neither a connection to the host OS nor to other VMs set up on the system.\\\\In out scenario we want to emulate a real network-stack with basic routing and switching, but do not want to expose this network to the outside. For this we will use a nat-network, since this fits the bill quite nicely.\\\\\textit{Note:} In a production environment it is more likely to use a bridge-network and connect directly to the existing network-stack. This way the network is not limited to a single host-machine.\\\\To create a NAT-network using kcli we specify following in our plan:
-\lstinputlisting[
-  caption=Plan: Nat-Network,
-	firstline=10,
-	lastline=13
-]{./kube-install/vms.yaml}
-This creates a simple nat-network with the appropriate netmask and a domain-name, which is used by the internal dns-server (dnsmasq).
-\subsection{Getting prerequisites}
+
+\subsection{Downloading resources}
+This guide comes with a few configuration-files that are used later on. It is recommended to clone the repo to the host-machine via \texttt{git clone https://github.com/\\zottelsheep/meds\_cloud\_7}. This guide will reference files used from the repo relative to its git-root.
+
+\subsection{Constructing our virtualized environment}
+Kcli has a feature called \texttt{plans} to construct a virtualized environment. These plans are simple YAML-files that define different resources that together form the virtualized environment.
+We'll use this feature to create a reproducible environment and save the configuration as code inside git.\\\\
+The plan at \texttt{./kube-install/vms.yaml} will create the virtual network, download the image and create the three VMs. We'll go in detail over the different sections later in this document:
+\lstinputlisting[caption=First lines of \texttt{./kube-install/vms.yaml},linerange={1-27}]{./kube-install/vms.yaml}
+This plan can be executed with the following command:
+\begin{lstlisting}[language=bash,caption=Deploy virtualized environment using \texttt{kcli}]
+# Machine: kubeadmin@host
+sudo kcli create plan ./kube-install/vms.yaml kubecluster
+\end{lstlisting}
+
+\clearpage
+\subsection{Download image and create pool}
 In order to run a VM, we need two things: An image and a place to put our VM files. 
-We first create a new \texttt{pool}. This pool is where all VM-Files and downloaded images are kept.\footnote{You may have to change the path to a new absolute path, since relative paths are a bit buggy in the current kcli version}
+We first create a new \texttt{pool}. This pool is where all VM-Files and downloaded images are kept.\footnote{You may have to change the path to a new absolute path, since relative paths are a bit buggy in the current \texttt{kcli} version}
 \lstinputlisting[
   caption=Plan: Pool Definition,
 	firstline=1,
-	lastline=3
+	lastline=3,
 ]{./kube-install/vms.yaml}
-Then we need to download a fresh Ubuntu-image. Kcli uses a tool called cloudinit to automatically configure images with for example ssh-keys. This tool is embedded onto the image itself, that is why we need special cloudimages. Canonical, the company behind Ubuntu and creator of cloudinit, has a large repository of cloudimages where you can download a variety of different cloud-images for different linux-distributions. This resource downloads the image into our pool and we can reference it by using the resource-name:
+Then we need to download a fresh Ubuntu-image. \texttt{Kcli} uses a tool called cloudinit to automatically configure images with for example ssh-keys. This tool is embedded onto the image itself, that is why we need special cloudimages. Canonical, the company behind Ubuntu and creator of cloudinit, has a large repository of cloudimages where you can download a variety of different cloud-images for different linux-distributions. \cite{CloudInit:2022}\\\\
+This resource downloads the image into our pool and we can reference it by using the resource-name:
 \lstinputlisting[
   caption=Plan: Image,
 	firstline=5,
 	lastline=8
 ]{./kube-install/vms.yaml}
+
+\subsection{Create virtual-network}
+In a virtual environment there are so called \texttt{virtual network adapters} that are used to establish network-connectivity to and between other machines. These virtual network adapters are often connected to a \texttt{virtual switch} operating in a multitude of different modes, for example:
+\begin{itemize}
+	\item \textbf{NAT}: Network Address Translation is most commonly used for simple outward network connectivity but no inward connectivity. In this configuration the outside network cannot talk directly to the VMs, although there is the possibility of Port-Forwarding to enable Guest communication.
+	\item \textbf{Bridge-Mode}: In this mode the VMs get directly connected to the outside network similar to a physical machine. This way all communication is managed through the original networking-stack and outward as well as inward traffic is possible.
+\end{itemize}
+The available modes and configurations are managed by the virtualization-platform and underlying OS. By default there is neither a connection to the host OS nor to other VMs set up on the system. \cite{libvirt:2014}\\\\
+In out scenario we want to emulate a real network-stack with basic routing and switching, but do not want to expose this network to the outside. For this we will use a nat-network, since this fits the bill quite nicely.\\\\
+\textit{Note:} In a production environment it is more likely to use a bridge-network and connect directly to the existing network-stack. This way the network is not limited to a single host-machine.\\\\
+To create a NAT-network using \texttt{kcli} we specify following in our plan:
+\lstinputlisting[
+  caption=Plan: Nat-Network,
+  firstnumber=10,
+	firstline=10,
+	lastline=13,
+]{./kube-install/vms.yaml}
+This creates a simple nat-network with the appropriate netmask and a domain-name, which is used by the internal dns-server (dnsmasq).
+
 \subsection{Provision the VMs}
-Now we can provision our VMs. We give some basic info about RAM and CPU, specify a disk\footnote{Sadly we can only specify a fixed sized disk using this version of kcli} and select our previously downloaded image.
+Now we can provision our VMs. We give some basic info about RAM and CPU, specify a disk\footnote{Sadly we can only specify a fixed sized disk using this version of \texttt{kcli}} and select our previously downloaded image.
 \lstinputlisting[
   caption=Plan: Example configuration for Node-VM,
 	firstline=15,
@@ -84,13 +112,15 @@ The \texttt{reservedns}, \texttt{reservehosts} and \texttt{reserveip} options ar
 
 \section{Setup Nodes}
 As we have learned, for Kubernetes each node must run a kubelet and a container-runtime. For our container-runtime we'll use \texttt{CRI-O}, a lightweight cri-compliant runtime, which is made specifically for Kubernetes.
-To bootstrap our actual kubelet we'll use a tool called \texttt{kubeadm} which is made to build up and administrate the individual infrastructure-components of a Kubernetes-Cluster.
+To bootstrap our actual kubelet we'll use a tool called \texttt{kubeadm} which is made to build up and administrate the individual infrastructure-components of a Kubernetes cluster. \cite{kubeadm:2022}
 
 \subsection{Install CRI-O}
 
 In order to install CRI-O, we'll first have to add the appropriate repositories and keyrings from the CRI-O website.
 
 \begin{lstlisting}[language=bash,caption=Add CRI-O repositories]
+# Machine: All kubernetes-nodes [master0,worker1,worker2]
+
 # Set Version
 export OS=xUbuntu_22.04
 export VERSION=1.26
@@ -108,25 +138,17 @@ sudo apt update
 sudo apt install cri-o crio-o-runc 
 \end{lstlisting}
 
-\begin{lstlisting}[language=bash] 
-sudo apt update
-sudo apt install cri-o crio-o-runc 
-\end{lstlisting}
-
-\subsection{Install kubeadm \& kubelet}
+\subsection{Install kubeadm \& kubelet} \label{kubernetes-keyrings}
 Same as with CRI-O, we have to get the repositories and corresponding keys before we can use our package-manager to install the needed packages:
 
-\begin{lstlisting}[language=bash] 
+\begin{lstlisting}[language=bash, caption=Get kubernetes keyrings and install kubeadm and kubelet] 
+# Machine: All kubernetes-nodes [master0,worker1,worker2]
+
 # Get respositories and keyrings
 sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 # Update respositories and install packages using apt
-sudo apt update
-sudo apt install kubeadm kubelet
-\end{lstlisting}
-We can then install the packages:
-\begin{lstlisting}[language=bash] 
 sudo apt update
 sudo apt install kubeadm kubelet
 \end{lstlisting}
@@ -136,6 +158,8 @@ sudo apt install kubeadm kubelet
 We have to enable some kernelmodules for CRI-O to function properly with Kubernetes on Ubuntu and enable ip-forwarding. In order for these changes to persist a reboot-cycle we save them into \textit{/etc/modules-load.d/crio.conf} and \textit{/etc/sysctl.d/99-kubernetes.conf} respecivly.
 
 \begin{lstlisting}[language=bash,caption=Enable kernelmodules] 
+# Machine: All kubernetes-nodes [master0,worker1,worker2]
+
 sudo modprobe overlay
 sudo modprobe br_netfilter
 
@@ -146,6 +170,8 @@ EOF
 \end{lstlisting}
 
 \begin{lstlisting}[language=bash,caption=Enable IP-Forwarding] 
+# Machine: All kubernetes-nodes [master0,worker1,worker2]
+
 cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
 net.ipv4.ip_forward                 = 1
 net.bridge.bridge-nf-call-iptables  = 1
@@ -159,6 +185,8 @@ sudo sysctl --system
 As a last step we need to enable and start the services using \texttt{systemctl}:
 
 \begin{lstlisting}[language=bash,caption=Starting CRI-O and kubelet services] 
+# Machine: All kubernetes-nodes [master0,worker1,worker2]
+
 # Enable and start CRI-O
 sudo systemctl enable crio.service
 sudo systemclt start crio.service
@@ -169,7 +197,14 @@ sudo systemctl enable kubelet.service
 sudo systemclt start kubelet.service
 sudo systemctl status kubelet.serivce
 \end{lstlisting}
-CRI-O should now be started and working. The kubelet will also start, but constantly be crashing, since it is waiting for further configuration from kubeadm.
+CRI-O should now be started and working. We can check the status via \texttt{sudo crio-status info}. The output should be similar to this:
+\begin{lstlisting}
+bashcgroup driver: systemd
+storage driver: overlay
+storage root: /var/lib/containers/storage
+\end{lstlisting}
+\\\\
+The kubelet should also start, but constantly crashing, since it is waiting for further configuration from kubeadm.
 
 \section{Bootstrapping Kubernetes}
 \subsection{Setup Master-Node}
@@ -185,16 +220,56 @@ After kubeadm is finished it will print the join-command for bootstrapping worke
 \subsection{Setup Worker-Node}
 The process to bootstrap a Worker-Node and get it to join a cluster is rather simple. We just need to execute the command, that the control-plane gave us previously. If the command got somehow lost, we can simply recreate a new token on the master-node with:
 \begin{lstlisting}[language=bash,caption=Get new Join-Token for Worker-Node] 
+# Machine: master-node [master0]
+
 sudo kubeadm token create --print-join-command
 \end{lstlisting}
 \begin{lstlisting}[language=bash,caption=Example Join-Command] 
+# Machine: All worker-nodes [worker0,worker1]
 sudo kubeadm join master0.k8s-thab.local:6443 --token <token> --discovery-token-ca-cert-hash <sha256-hash>
 \end{lstlisting}
-Mind we also need to execute this command with \texttt{sudo} to get elevated privileges. This step can take a while, especially when adding a node to a completely configured cluster, since it needs to install networking and other resources, from various plugins.\\\\We can check the status using \texttt{kubectl get nodes}.
+Mind we also need to execute this command with \texttt{sudo} to get elevated privileges. This step can take a while, especially when adding a node to a completely configured cluster, since it needs to install networking and other resources, from various plugins.
+
+\subsection{Getting credentials for \texttt{kubectl}}
+For further configuration of our cluster we'll use the \texttt{kubectl} tool.\\\\
+To install \texttt{kubectl} to our host-machine, we can need to install the kubernetes keyrings like we did before in \ref{kubernetes-keyrings}. Afterwards we can install \texttt{kubectl} via \texttt{apt}
+\begin{lstlisting}[language=bash,caption=Install kubectl] 
+# Machine: kubeadmin@host
+sudo apt install kubectl
+\end{lstlisting}
+\\\\
+Then we need to get admin credentials from our master-node and install them into the correct location. This requires tree steps:
+\begin{itemize}
+  \item On the master-node copy the credentials from \texttt{/etc/kubernetes/admin.conf} to our home-directory
+  \item Create the folder for the kubernetes configuration on our host-system at \texttt{~/.kube/}
+  \item Copy the credentials from the master-node to our host-system via \texttt{kcli scp}
+\end{itemize}
+\\\\
+This code snipped will do all tree:
+\begin{lstlisting}[language=bash, caption=Get admin credentials from master-node] 
+# Machine: kubeadmin@host
+kcli ssh master0 "mkdir ~/.kube/;sudo cp /etc/kubernetes/admin.conf ~/.kube/config"
+mkdir ~/.kube/
+kcli scp master0:~/.kube/config/ ~/.kube/config
+\end{lstlisting}
+\\\\
+If we try to execute the command \texttt{kubectl get -A all} we should see various pods like \texttt{kube-proxy} and \texttt{etcd} running. The pods \texttt{coredns} should be in a pending state, since these will only start after we've setup cluster-networking.\\
+\begin{lstlisting}[caption=Cluster state after bootstrapping master- and worker-nodes] 
+NAME                                  READY   STATUS 
+pod/coredns-787d4945fb-cjrpv          1/1     Pending
+pod/coredns-787d4945fb-n9bxz          1/1     Pending
+pod/etcd-master0                      1/1     Running
+pod/kube-apiserver-master0            1/1     Running
+pod/kube-controller-manager-master0   1/1     Running
+pod/kube-proxy-57k2k                  1/1     Running
+pod/kube-proxy-8skw8                  1/1     Running
+pod/kube-proxy-pldrb                  1/1     Running
+pod/kube-scheduler-master0            1/1     Running
+\end{lstlisting}
 
 \section{Setup Cluster-Networking and Loadbalancing}
 \subsection{Cluster-Networking}
-After bootstrapping the master and worker nodes, we still need to deploy our cluster-networking plugin. In our case we chose the \texttt{flannel-overlay} plugin.
+As mentioned, after bootstrapping the master and worker nodes, we still need to deploy our cluster-networking plugin. In our case we chose the \texttt{flannel-overlay} plugin.
 To install we only have to apply one configuration-yaml using kubectl:
 \begin{lstlisting}[language=bash,caption=Deploy Flannel-Networking] 
 kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/v0.20.2/Documentation/kube-flannel.yml
@@ -231,7 +306,7 @@ spec:
  - default
 EOF
 \end{lstlisting}
-
+\clearpage
 \subsection{Setup Ingress-Support}
 The last step we have to do is installing an ingress-controller in order for ingress-services to work. We have opted to use the \texttt{nginx-ingress} controller.\\\\To deploy the ingress-controller we'll use following configuration-yaml:
 \begin{lstlisting}[language=bash,caption=Deploy nginx-ingress as ingress-controller] 
@@ -239,6 +314,6 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 \end{lstlisting}
 \vspace{2cm}
 \begin{center}
-    \Large{... and that's it!}    
+  \Large{\textbf{... and that's it!}}
 \end{center}
 
