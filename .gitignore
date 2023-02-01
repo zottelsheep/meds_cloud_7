@@ -114,3 +114,16 @@ venv.bak/
 # Models (Onnx, Tensorflow)
 .onnx
 .h5
+
+# Latex
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.toc
+*.fls
